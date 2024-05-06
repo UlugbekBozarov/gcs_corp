@@ -8,7 +8,6 @@ import {
 import { Spinner } from "components";
 import ErrorBoundary from "pages/error/ErrorBoundary";
 
-const SignIn = lazy(() => import("pages/signIn/SignIn"));
 const SignUp = lazy(() => import("pages/signUp/SignUp"));
 
 const NotFound = lazy(() => import("pages/404/NotFound"));
@@ -16,16 +15,7 @@ const NotFound = lazy(() => import("pages/404/NotFound"));
 const router = createBrowserRouter([
   {
     path: "/",
-    children: [
-      {
-        path: "",
-        element: <SignIn />,
-      },
-      {
-        path: "sign-up",
-        element: <SignUp />,
-      },
-    ],
+    element: <SignUp />,
     errorElement: <ErrorBoundary />,
   },
   {

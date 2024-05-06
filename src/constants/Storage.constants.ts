@@ -1,5 +1,6 @@
 export const STORAGE_NAMES = {
   language: "lang",
-  authorization: "Authorization",
+  authorizationKey: "AuthorizationKey",
+  authorizationSecret: "AuthorizationSecret",
   user: "user",
 };
