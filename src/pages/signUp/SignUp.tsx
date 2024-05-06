@@ -20,10 +20,10 @@ const SignUp = () => {
 
   const formStore = useForm({
     defaultValues: {
-      [formNames.name]: "Test17",
-      [formNames.email]: "ulugbek@gmail.com",
-      [formNames.key]: "test21",
-      [formNames.secret]: "secretTest21",
+      [formNames.name]: "",
+      [formNames.email]: "",
+      [formNames.key]: "",
+      [formNames.secret]: "",
     },
   });
 
