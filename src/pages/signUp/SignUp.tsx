@@ -1,8 +1,11 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { get } from "lodash";
 
 import { ControlledCheckbox, ControlledInput } from "controller";
+import { useSignUpMutation } from "provider/redux/features/Api";
+import { STORAGE_NAMES } from "constants/Storage.constants";
+import { setItemCookie } from "services";
 
 const formNames = {
   name: "name",
@@ -13,16 +16,71 @@ const formNames = {
 };
 
 const SignUp = () => {
-  const navigate = useNavigate();
+  const [signUp, { isLoading }] = useSignUpMutation();
 
   const formStore = useForm({
-    defaultValues: {},
+    defaultValues: {
+      [formNames.name]: "Test17",
+      [formNames.email]: "ulugbek@gmail.com",
+      [formNames.key]: "test21",
+      [formNames.secret]: "secretTest21",
+    },
   });
 
-  const { handleSubmit } = formStore;
+  const { handleSubmit, setError } = formStore;
 
-  const submitHandler = handleSubmit((data) => {
+  const submitHandler = handleSubmit(async (data) => {
     try {
+      await signUp({
+        name: get(data, formNames.name, "") as string,
+        email: get(data, formNames.email, "") as string,
+        key: get(data, formNames.key, "") as string,
+        secret: get(data, formNames.secret, "") as string,
+      })
+        .then((response) => {
+          if (get(response, "error")) {
+            setError(formNames.key, {
+              type: "manual",
+              message: get(
+                response,
+                "error.message",
+                "User with this key already exists"
+              ),
+            });
+          } else {
+            const date = new Date();
+            date.setMonth(date.getMonth() + 1);
+            if (get(data, formNames.rememberMe)) {
+              setItemCookie(
+                STORAGE_NAMES.authorizationKey,
+                get(response, "data.data.key"),
+                {
+                  expires: new Date(date),
+                }
+              );
+              setItemCookie(
+                STORAGE_NAMES.authorizationSecret,
+                get(response, "data.data.secret"),
+                {
+                  expires: new Date(date),
+                }
+              );
+            } else {
+              setItemCookie(
+                STORAGE_NAMES.authorizationKey,
+                get(response, "data.data.key")
+              );
+              setItemCookie(
+                STORAGE_NAMES.authorizationSecret,
+                get(response, "data.data.secret")
+              );
+            }
+            window.location.href = "/";
+          }
+        })
+        .catch((error) => {
+          console.log("error: ", error);
+        });
     } catch (error) {}
   });
 
@@ -91,6 +149,12 @@ const SignUp = () => {
                   size="large"
                   type="submit"
                   variant="contained"
+                  disabled={isLoading}
+                  startIcon={
+                    isLoading && (
+                      <CircularProgress size="15px" color="inherit" />
+                    )
+                  }
                 >
                   Sign up
                 </Button>

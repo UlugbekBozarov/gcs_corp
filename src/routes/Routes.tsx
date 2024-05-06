@@ -5,7 +5,6 @@ import { getAuthorization } from "services/custom";
 
 const Routes = () => {
   const authorization = getAuthorization();
-  console.log("authorization: ", authorization);
   if (authorization) {
     return <PrivateRouts />;
   } else {

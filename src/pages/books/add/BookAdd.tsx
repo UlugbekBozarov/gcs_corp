@@ -1,20 +1,32 @@
 import { useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
-import { Box, Button, Card, Grid, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CircularProgress,
+  Grid,
+  Stack,
+} from "@mui/material";
+import { get } from "lodash";
 
 import { LayoutMain } from "components";
 import { ControlledInput } from "controller";
 
+import { useAddBookMutation } from "../../../provider/redux/features/Api";
+
 const formNames = {
   title: "title",
+  cover: "cover",
   author: "author",
   published: "published",
   pages: "pages",
 };
 
-const BooksAddOrEdit = () => {
+const BookAdd = () => {
   const navigate = useNavigate();
-  // const { bookId } = useParams();
+
+  const [addBook, { isLoading }] = useAddBookMutation();
 
   const formStore = useForm({
     defaultValues: {},
@@ -28,6 +40,13 @@ const BooksAddOrEdit = () => {
 
   const submitHandler = handleSubmit((data) => {
     try {
+      addBook({
+        title: get(data, formNames.title, ""),
+        cover: get(data, formNames.cover, ""),
+        author: get(data, formNames.author, ""),
+        published: get(data, formNames.published, ""),
+        pages: get(data, formNames.pages, ""),
+      });
     } catch (error) {}
   });
 
@@ -62,6 +81,15 @@ const BooksAddOrEdit = () => {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <ControlledInput
+                      labelKey="Cover"
+                      name={formNames.cover}
+                      rules={{
+                        required: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <ControlledInput
                       labelKey="Published"
                       name={formNames.published}
                       rules={{
@@ -84,10 +112,25 @@ const BooksAddOrEdit = () => {
             </Card>
             <Box display="flex" justifyContent="flex-end" mt="20px">
               <Stack direction="row" spacing={2}>
-                <Button size="large" variant="outlined" onClick={handleCancel}>
+                <Button
+                  size="large"
+                  variant="outlined"
+                  disabled={isLoading}
+                  onClick={handleCancel}
+                >
                   Cancel
                 </Button>
-                <Button size="large" type="submit" variant="contained">
+                <Button
+                  size="large"
+                  type="submit"
+                  disabled={isLoading}
+                  variant="contained"
+                  startIcon={
+                    isLoading && (
+                      <CircularProgress size="15px" color="inherit" />
+                    )
+                  }
+                >
                   Save
                 </Button>
               </Stack>
@@ -99,4 +142,4 @@ const BooksAddOrEdit = () => {
   );
 };
 
-export default BooksAddOrEdit;
+export default BookAdd;

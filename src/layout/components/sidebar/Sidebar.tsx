@@ -57,7 +57,7 @@ const DrawerContend = () => {
             },
             {
               id: "logout",
-              disabled: true,
+              // disabled: true,
               link: "/logout",
               labelKey: "Logout",
               icon: <Logout />,

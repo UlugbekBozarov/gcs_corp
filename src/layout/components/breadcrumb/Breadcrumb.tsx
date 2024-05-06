@@ -12,6 +12,10 @@ const Breadcrumb = () => {
   const location = useLocation();
 
   const locationItems = useMemo(() => {
+    if (get(location, "pathname", "") === "/") {
+      return [""];
+    }
+
     let array = get(location, "pathname", "").split("/");
 
     if (array.at(-2) === "edit") {

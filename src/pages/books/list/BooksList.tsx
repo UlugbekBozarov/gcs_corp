@@ -6,6 +6,8 @@ import { get } from "lodash";
 import { LayoutMain, PaginationTable, SearchInput } from "components";
 import { Add } from "assets/icons";
 
+import { useGetBooksQuery } from "../../../provider/redux/features/Api";
+
 // interface IBookType {
 //   createdAt: string;
 //   updatedAt: string;
@@ -16,6 +18,8 @@ import { Add } from "assets/icons";
 
 const BooksList = () => {
   const navigate = useNavigate();
+
+  const { data, isLoading } = useGetBooksQuery("");
 
   const goToAdd = () => {
     navigate("/books/add");
@@ -46,6 +50,8 @@ const BooksList = () => {
       </Box>
       <PaginationTable
         isChecked={false}
+        isLoading={isLoading}
+        data={data || []}
         onRowClick={handleRowClick}
         columns={[
           {

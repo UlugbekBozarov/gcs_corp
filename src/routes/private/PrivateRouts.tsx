@@ -8,16 +8,21 @@ const Layout = lazy(() => import("layout/Layout"));
 const NotFound = lazy(() => import("pages/404/NotFound"));
 const ErrorBoundary = lazy(() => import("pages/error/ErrorBoundary"));
 
+const Home = lazy(() => import("pages/home/Home"));
+
 const BooksList = lazy(() => import("pages/books/list/BooksList"));
-const BooksAddOrEdit = lazy(
-  () => import("pages/books/addOrEdit/BooksAddOrEdit")
-);
+const BookAdd = lazy(() => import("pages/books/add/BookAdd"));
+const BookEdit = lazy(() => import("pages/books/edit/BookEdit"));
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
       {
         path: "/books",
         children: [
@@ -27,11 +32,11 @@ const router = createBrowserRouter([
           },
           {
             path: "add",
-            element: <BooksAddOrEdit />,
+            element: <BookAdd />,
           },
           {
             path: "edit/:bookId",
-            element: <BooksAddOrEdit />,
+            element: <BookEdit />,
           },
         ],
       },
